@@ -1,5 +1,6 @@
 // Script to update database
 
+
 db.school.update({"name": "Holberton school"},
 {
     $set: {
