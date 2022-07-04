@@ -1,0 +1,5 @@
+// inset data to collection school
+
+
+db.createCollection("school")
+db.school.insert({"name": "Holberton school"})

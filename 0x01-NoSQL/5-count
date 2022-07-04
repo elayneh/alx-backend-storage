@@ -1,0 +1,4 @@
+// Script to return number of documents
+
+
+db.school.estimatedDocumentCount()
