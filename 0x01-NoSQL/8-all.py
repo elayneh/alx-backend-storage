@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
+""" mongo list """
 
-from asyncio.windows_events import NULL
-
+import pymongo
 
 def list_all(mongo_collection):
     """ List all documents """
     lists = mongo_collection.find()
-    if (lists.find() == NULL):
+    if not lists:
         return []
     else:
-        return lists
+        return list(lists)
         
