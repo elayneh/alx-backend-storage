@@ -6,7 +6,7 @@ import pymongo
 
 def schools_by_topic(mongo_collection, topic):
     """ Return schools with specified topic """
-    schools = []
-    if not mongo_collection:
-        return schools
+    # schools = []
+    # if not mongo_collection:
+    #     return schools
     return mongo_collection.find({}, {"topics": topic})
