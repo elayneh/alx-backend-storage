@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Print info f nginx logs """
+"""Print info in a collection"""
 from pymongo import MongoClient
 
 if __name__ == "__main__":
-    """ check for all elements in a collection """
+    """ Make a check for all elements in a collention """
     client = MongoClient('mongodb://127.0.0.1:27017')
     collection = client.logs.nginx
 
@@ -14,7 +14,26 @@ if __name__ == "__main__":
         method_count = collection.count_documents({'method': method})
         print(f"\tmethod {method}: {method_count}")
 
-    check_get = collection.count_documents(
-        {'method': 'GET', 'path': "/status"})
+    check_get = collection.count_documents({
+        'method': 'GET', 'path': "/status"
+    })
     print(f"{check_get} status check")
-    
+
+    print("IPs:")
+    top_ips = collection.aggregate([
+        {"$group":
+            {
+                "_id": "$ip",
+                "count": {"$sum": 1}
+            }
+        },
+        {"$sort": {"count": -1}},
+        {"$limit": 10},
+        {"$project": {
+            "_id": 0,
+            "ip": "$_id",
+            "count": 1
+        }}
+    ])
+    for ip in top_ips:
+        print(f"\t{ip.get('ip')}: {ip.get('count')}")
