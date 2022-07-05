@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
-""" update based on names """
-
-import pymongo
+""" MongoDB Update """
 
 
 def update_topics(mongo_collection, name, topics):
-    """ updater based on specified name """
-    mongo_collection.update({"name": name}, {"$set": {"topics": topics}})
+    """Update a document by name """
+    mongo_collection.update_many({"name": name}, {"$set": {"topics": topics}})
