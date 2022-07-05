@@ -1,33 +1,27 @@
 #!/usr/bin/env python3
-"""Print info in a collection"""
+""" python script to fetch stats """
 from pymongo import MongoClient
 
-if __name__ == "__main__":
-    """ Make a check for all elements in a collention """
-    client = MongoClient('mongodb://127.0.0.1:27017')
-    collection = client.logs.nginx
+if __name__ == '__main__':
+    """fetch specified stats """
+    client = MongoClient()
+    nginx = client.logs.nginx
 
-    print(f"{collection.estimated_document_count()} logs")
+    print(f'{nginx.count_documents({})} logs')
 
-    print("Methods:")
-    for method in ["GET", "POST", "PUT", "PATCH", "DELETE"]:
-        method_count = collection.count_documents({'method': method})
-        print(f"\tmethod {method}: {method_count}")
+    print('Methods:')
+    methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
+    for method in methods:
+        count = nginx.count_documents({"method": method})
+        print(f'\tmethod {method}: {count}')
 
-    check_get = collection.count_documents({
-        'method': 'GET', 'path': "/status"
-    })
-    print(f"{check_get} status check")
+    status_checks = nginx.count_documents(
+        {"path": "/status", "method": "GET"})
+    print(f'{status_checks} status check')
 
-    print("IPs:")
-    top_ips = collection.aggregate([{'$group':
-                                     {
-                                         "_id": '$ip',
-                                         "count": {'$sum': 1}
-                                     }
-                                     },
-                                    {'$sort': {"count": -1}},
-                                    {'$limit': 10},
-                                    ])
-    for ip in top_ips:
+    print('IPs:')
+    ips = nginx.aggregate([{'$group': {'_id': '$ip',
+                                       'count': {'$sum': 1}}},
+                           {'$sort': {'count': -1}}, {'$limit': 10}])
+    for ip in ips:
         print(f'\t{ip.get("_id")}: {ip.get("count")}')
