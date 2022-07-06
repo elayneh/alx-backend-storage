@@ -4,12 +4,13 @@
 import redis
 import requests
 r = redis.Redis()
+count = 0
 
 
 def get_page(url: str) -> str:
-    count = 0
-    """ track how many times a
-    particular URL was accessed in the key count:{url} """
+    """ track how many times a particular URL was accessed in the key
+        "count:{url}"
+        and cache the result with an expiration time of 10 seconds """
     r.set(f"cached:{url}", count)
     resp = requests.get(url)
     r.incr(f"count:{url}")
@@ -19,3 +20,4 @@ def get_page(url: str) -> str:
 
 if __name__ == "__main__":
     get_page('http://slowwly.robertomurray.co.uk')
+    
