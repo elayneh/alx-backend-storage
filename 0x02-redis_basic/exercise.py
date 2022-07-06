@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-""" Writing strings to Redis, Reading from Redis and recovering original type """
+""" Writing strings to Redis,
+Reading from Redis and recovering original type """
 from typing import Union, Callable, Optional, Any
 import redis
 import uuid
@@ -7,7 +8,8 @@ from functools import wraps
 
 
 def call_history(method: Callable) -> Callable:
-    """ store the history of inputs and outputs for a particular function """
+    """ store the history of inputs and
+    outputs for a particular function """
     key = method.__qualname__
     inputs = key + ":inputs"
     outputs = key + ":outputs"
@@ -23,7 +25,8 @@ def call_history(method: Callable) -> Callable:
 
 
 def count_calls(method: Callable) -> Callable:
-    """ to count how many times methods of the Cache class are called """
+    """ to count how many times methods of the
+    Cache class are called """
     key = method.__qualname__
 
     @wraps(method)
@@ -36,6 +39,7 @@ def count_calls(method: Callable) -> Callable:
 
 class Cache:
     """ class """
+
     def __init__(self):
         """ constructor - store an instance of the Redis client as a private
         variable named _redis and flush the instance using flushdb """
@@ -45,7 +49,8 @@ class Cache:
     @call_history
     @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
-        """ generate a random key (e.g. using uuid), store the input data in
+        """ generate a random key (e.g. using uuid),
+        store the input data in
         Redis using the random key and return the key """
         key = str(uuid.uuid4())
         self._redis.set(key, data)
@@ -53,7 +58,8 @@ class Cache:
 
     def get(self, key: str,
             fn: Optional[Callable] = None) -> Union[str, bytes, int, float]:
-        """ take a key string argument and an optional Callable argument named
+        """ take a key string argument and an optional
+        Callable argument named
             fn. This callable will be used to convert the data back to the
             desired format """
         data = self._redis.get(key)
